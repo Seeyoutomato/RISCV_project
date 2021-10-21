@@ -4,36 +4,34 @@
 	str:  .string "The only single number is: "
   
 .text
-
 # s0 = nums base address
 # s1 = ans
 # s2 = len
-# t1 = num[i]
 # s3 = i
+# t1 = num[i]
 
 main:
-	la   s0, nums		
-	li   s1, 0
-	la   s2, len
-	lw   s2, 0(s2)
-	li   s3, 0
-	j    singlenumber
-	j    print
+	la   s0, nums		          # s0 = nums base address
+	li   s1, 0			  # s1 = ans
+	la   s2, len			  # s2 = len
+	lw   s2, 0(s2)                    # s2 become register
+	li   s3, 0                        # for the loop time counting
+	jal  ra, singlenumber             # jump and link ,jump to singlenumber and record the next instruction address 
+	j    print                        # when return instruction ,print the value 
 	
 	
-singlenumber:
-			
-	lw   t1, 0(s0)		          # t1 = num[i]	
+singlenumber:			
+	lw   t1, 0(s0)		          # t1 = nums[i],every time we need to update nums' array value
 	xor  s1, t1, s1		          # xor all num[i]
-	addi s0, s0, 4		
+	addi s0, s0, 4		          # array offset
 	addi s3, s3, 1		          # i++
-	bnq  s3, s2, singlenumber	  # execute 9 times
-  jr   ra
+	bne  s3, s2, singlenumber	  # execute 9 times
+  	jr   ra
 	
 print:
-	la  a0, str		              # load string
-	li  a7, 4		                # print string
+	la  a0, str		          # load string
+	li  a7, 4		          # print string
 	ecall			
 	add s1, s1, zero	          # load answer
-	li  a7, 1		                # print integer
+	li  a7, 1		          # print integer
 	ecall
