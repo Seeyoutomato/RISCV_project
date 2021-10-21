@@ -7,4 +7,5 @@ int main(){
   }
         
    printf("The only single number is: %d",ans);
+   return 0;
 }
