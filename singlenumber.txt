@@ -1,0 +1,39 @@
+.data
+	nums: .word 20,5,10,5,20,3,7,7,3	
+	len:  .word 9
+	str:  .string "The only single number is: "
+  
+.text
+
+# s0 = nums base address
+# s1 = ans
+# s2 = len
+# t1 = num[i]
+# s3 = i
+
+main:
+	la   s0, nums		
+	li   s1, 0
+	la   s2, len
+	lw   s2, 0(s2)
+	li   s3, 0
+	j    singlenumber
+	j    print
+	
+	
+singlenumber:
+			
+	lw   t1, 0(s0)		          # t1 = num[i]	
+	xor  s1, t1, s1		          # xor all num[i]
+	addi s0, s0, 4		
+	addi s3, s3, 1		          # i++
+	bnq  s3, s2, singlenumber	  # execute 9 times
+  jr   ra
+	
+print:
+	la  a0, str		              # load string
+	li  a7, 4		                # print string
+	ecall			
+	add s1, s1, zero	          # load answer
+	li  a7, 1		                # print integer
+	ecall
