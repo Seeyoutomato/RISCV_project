@@ -1,37 +1,36 @@
 .data
-	nums: .word 20,5,10,5,20,3,7,7,3	
+	nums: .word 12,22,9,20,22,9,11,11,20	
 	len:  .word 9
-	str:  .string "The only single number is: "
-  
+	 
 .text
-# s0 = nums base address
-# s1 = ans
+# t2 = nums base address
+# s0 = ans
+# s1 = i
 # s2 = len
-# s3 = i
-# t1 = num[i]
+# s5 = nums[i]
+
 
 main:
-	la   s0, nums		          # s0 = nums base address
-	li   s1, 0			  # s1 = ans
+	jal  ra, initial                  # jump and link , record the next address to start when return
+	j    print
+initial:
+	la   t2, nums		          # t2 = nums base address
+	li   s0, 0			  # s0 = ans
+	li   s1, 0                        # for the loop time counting
 	la   s2, len			  # s2 = len
-	lw   s2, 0(s2)                    # s2 become register
-	li   s3, 0                        # for the loop time counting
-	jal  ra, singlenumber             # jump and link ,jump to singlenumber and record the next instruction address 
-	j    print                        # when return instruction ,print the value 
-	
-	
+	lw   s2, 0(s2)                    # s2 become register	
+		
 singlenumber:			
-	lw   t1, 0(s0)		          # t1 = nums[i],every time we need to update nums' array value
-	xor  s1, t1, s1		          # xor all num[i]
-	addi s0, s0, 4		          # array offset
-	addi s3, s3, 1		          # i++
-	bne  s3, s2, singlenumber	  # execute 9 times
-  	jr   ra
+	lw   s5, 0(t2)		          # s5 = nums[i],every time we need to record 'nums' array value
+	xor  s0, s5, s0		          # xor all num[i]
+	addi t2, t2, 4		          # array offset
+	addi s1, s1, 1		          # i++
+	blt  s1, s2, singlenumber	  # execute 9 times
+  	jr   ra                           # return locate address
 	
 print:
-	la  a0, str		          # load string
-	li  a7, 4		          # print string
-	ecall			
-	add s1, s1, zero	          # load answer
-	li  a7, 1		          # print integer
+	mv   a0, s0			  # print number
+	li   a7, 1
 	ecall
+
+exit:
